@@ -1,0 +1,116 @@
+.Listing {
+  width: 400px;
+  height: 700px;
+  background-color: rgb(42, 42, 42);
+  border: 4px solid red;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.Listing h3 {
+  font-size: x-large;
+  background: transparent;
+}
+
+.cate{
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+/* .Listing div span{
+    width: 320px;
+    height: 50px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    font-size: 20px;
+    justify-content: space-between;
+} */
+
+.Listing div span button {
+  all: unset;
+  border: 2px solid red;
+  border-radius: 21px;
+  height: 34px;
+  width: 100px;
+  display: none;
+}
+
+.Listing div span:hover button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.searchBar {
+  all: unset;
+  background-color: transparent;
+  width: 350px;
+  height: 40px;
+  text-align: center;
+  font-size: 20px;
+  border: 3px solid red;
+  border-radius: 24px;
+}
+
+.container {
+  width: 350px;
+  height: 470px;
+  display: flex;
+  background: transparent;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.List-itm {
+  width: 300px;
+  min-height: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  font-size: 20px;
+  justify-content: space-between;
+}
+
+.category {
+  all: unset;
+  width: 290px;
+  height: 40px;
+  padding-left: 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  border: 3px solid red;
+  border-radius: 24px;
+  margin-right: 10px;
+}
+.add-category{
+    all: unset;
+    width: 40px;
+    height: 40px;
+    border: 3px solid red;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category option{
+  all: unset;
+  background-color: rgb(30, 30, 30);
+  height: 40px;
+  width: 290px;
+  border-radius: 20px;
+}
