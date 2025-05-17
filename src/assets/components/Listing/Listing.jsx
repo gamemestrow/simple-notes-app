@@ -1,25 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./Listing.css";
 import { componentContext, notesContext } from "../../../App";
+import { SlArrowDown } from "react-icons/sl";
 
 const Listing = ({ setkeyOfNote }) => {
   const [prevNotes, setprevNotes] = useState([]);
+  const [filteredNotes, setfilteredNotes] = useState([]);
   const [notes, setnotes] = useContext(notesContext);
   const setpage = useContext(componentContext);
   const [filter, setfilter] = useState("");
   const [addCategory, setaddCategory] = useState(false);
-  const [categoryname, setcategoryname] = useState("")
-  const [category, setcategory] = useState({name:[]})
-  const getCategory = JSON.parse(localStorage.getItem("Category")) || [];
+  const [categoryname, setcategoryname] = useState("");
+  const [category, setcategory] = useState([]);
+  const [added, setadded] = useState(false);
+  const [selectedCaregory, setselectedCaregory] = useState("");
 
   useEffect(() => {
     const rawdata = JSON.parse(localStorage.getItem("notes")) || [];
     setprevNotes(rawdata);
+    setfilteredNotes(rawdata);
   }, [notes]);
 
-  const handleClick = (e) => {
+  const handleClick = (itm, e) => {
     setpage("View");
-    setkeyOfNote(e);
+    const index = prevNotes.findIndex(
+      obj => obj.title === itm.title
+    );
+    setkeyOfNote(index);
   };
 
   const handleFilter = (e) => {
@@ -29,22 +36,61 @@ const Listing = ({ setkeyOfNote }) => {
   };
 
   const handleCategory = (e) => {
-    if(e == "done" && categoryname != null){
+    if (e == "done" && categoryname != null) {
       setaddCategory(!addCategory);
-      
-      // const keyss = {"name":"whoo kares", "naam":"no one kares"}
-      // const data = `[${keyss}]`
-      localStorage.setItem("hay","data")
-      console.log(typeof(notes))
-      // localStorage.setItem("Category",categoryname)
-    }
-    else if(e == "done"&& categoryname == null){
-      setaddCategory(!addCategory)
-    }
-    else{
+      const prevCategory = JSON.parse(localStorage.getItem("categories")) || [];
+      const keys = [...prevCategory, { [categoryname]: [] }];
+      localStorage.setItem("categories", JSON.stringify(keys));
+      setadded(true);
+    } else if (e == "done" && categoryname == null) {
+      setaddCategory(!addCategory);
+    } else {
       setaddCategory(!addCategory);
     }
   };
+
+  const handleAddNoteToCategory = (e, itm) => {
+    const localdata = JSON.parse(localStorage.getItem("categories")) || [];
+    const found = localdata.find((obj) => e.target.value in obj);
+    if (e.target.value === "remove") {
+      localdata.forEach((element) => {
+        const key = Object.keys(element)[0];
+        element[key] = element[key].filter((item) => item != itm.title);
+      });
+      localStorage.setItem("categories", JSON.stringify(localdata));
+    } else {
+      found[e.target.value].push(itm.title);
+      localStorage.setItem("categories", JSON.stringify(localdata));
+    }
+  };
+
+  const handlechangeCategory = (e) => {
+    const selected = e.target.value;
+    setselectedCaregory(selected);
+
+    if (selected === "all") {
+      setfilteredNotes(prevNotes);
+    } else {
+      const localdata = JSON.parse(localStorage.getItem("categories")) || [];
+      const found = localdata.find((obj) => selected in obj);
+
+      if (found) {
+        const titles = found[selected]; // Array of titles
+        const filtered = prevNotes.filter((note) =>
+          titles.includes(note.title)
+        );
+        setfilteredNotes(filtered);
+      } else {
+        setfilteredNotes([]); // No matching category
+      }
+    }
+  };
+
+  useEffect(() => {
+    const getCategory = JSON.parse(localStorage.getItem("categories")) || [];
+    setcategory(getCategory);
+    setadded(false);
+  }, [added]);
 
   return (
     <div className="Listing">
@@ -59,20 +105,41 @@ const Listing = ({ setkeyOfNote }) => {
       <div className="cate">
         {addCategory ? (
           <>
-            <input className="category" value={categoryname} onChange={(e)=>{setcategoryname(e.target.value)}} />
-            <button className="add-category" onClick={() => handleCategory("done")}>
+            <input
+              className="category"
+              value={categoryname}
+              onChange={(e) => {
+                setcategoryname(e.target.value);
+              }}
+            />
+            <button
+              className="add-category"
+              onClick={() => handleCategory("done")}
+            >
               Done
             </button>
           </>
         ) : (
           <>
-            <select className="category" placeholder="category">
+            <select
+              className="category"
+              placeholder="category"
+              onChange={(e) => handlechangeCategory(e)}
+            >
               <option value="all">all</option>
-              {getCategory.map((item,index)=>{
-                <option value={`${item}`}>{item}</option>
+              {category.map((item, index) => {
+                const key = Object.keys(item);
+                return (
+                  <option key={index} value={`${key}`}>
+                    {key}
+                  </option>
+                );
               })}
             </select>
-            <button className="add-category" onClick={() => handleCategory("add")}>
+            <button
+              className="add-category"
+              onClick={() => handleCategory("add")}
+            >
               +
             </button>
           </>
@@ -80,16 +147,29 @@ const Listing = ({ setkeyOfNote }) => {
       </div>
 
       <div className="container">
-        {prevNotes.map((itm, index) => (
-          <span className="List-itm" key={index}>
+        {filteredNotes.map((itm, index) => (
+          <span
+            className="List-itm"
+            key={index}
+            onClick={() => {
+              handleClick(itm, index);
+            }}
+          >
             {itm.title}
-            <button
-              onClick={() => {
-                handleClick(index);
-              }}
+            <select
+              className="show"
+              onChange={(e) => handleAddNoteToCategory(e, itm)}
             >
-              View
-            </button>
+              <option value="remove">remove</option>
+              {category.map((item, index) => {
+                const key = Object.keys(item);
+                return (
+                  <option key={index} value={`${key}`}>
+                    {key}
+                  </option>
+                );
+              })}
+            </select>
           </span>
         ))}
       </div>

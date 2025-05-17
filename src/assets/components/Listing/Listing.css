@@ -35,16 +35,17 @@
     justify-content: space-between;
 } */
 
-.Listing div span button {
+.Listing div span select {
   all: unset;
   border: 2px solid red;
   border-radius: 21px;
   height: 34px;
   width: 100px;
   display: none;
+  padding-left: 10px;
 }
 
-.Listing div span:hover button {
+.Listing div span:hover select {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,3 +115,10 @@
   width: 290px;
   border-radius: 20px;
 }
+/* .hidden{
+  visibility: hidden;
+}
+
+.show{
+  display: absolute;
+} */

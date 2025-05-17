@@ -20,7 +20,6 @@ const Create = () => {
       localStorage.setItem("notes", JSON.stringify(newNote));
       setnotes({ title: "", note: "" });
     }
-    console.log("done sir")
   };
 
   useEffect(() => {
